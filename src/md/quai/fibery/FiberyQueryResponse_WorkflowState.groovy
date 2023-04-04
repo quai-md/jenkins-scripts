@@ -1,8 +1,8 @@
 import com.google.gson.annotations.SerializedName
 
 class FiberyQueryResponse_WorkflowState {
-    @SerializedName("fibery/id")
+    @SerializedName(value = "fibery/id")
     String id;
-    @SerializedName("enum/name")
+    @SerializedName(value = "enum/name")
     String name;
 }

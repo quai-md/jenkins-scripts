@@ -1,10 +1,10 @@
 import com.google.gson.annotations.SerializedName
 
 class FiberyQueryResponse_Result {
-    @SerializedName("fibery/public-id")
+    @SerializedName(value = "fibery/public-id")
     String publicId;
-    @SerializedName("fibery/id")
+    @SerializedName(value = "fibery/id")
     String id;
-    @SerializedName("workflow/state")
+    @SerializedName(value = "workflow/state")
     FiberyQueryResponse_WorkflowState state;
 }
