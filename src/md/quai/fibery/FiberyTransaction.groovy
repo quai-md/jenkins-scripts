@@ -152,7 +152,7 @@ public class FiberyTransaction extends Transaction_JSON {
                             ]
                     ]]
         String URL = "https://quai.fibery.io/api/commands";
-        var response = createRequest()
+        def response = createRequest()
                 .setMethod(HttpMethod.Post)
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
