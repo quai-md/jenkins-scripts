@@ -140,14 +140,14 @@ public class FiberyTransaction extends Transaction_JSON {
         def body = [
                 command: "fibery.entity/query",
                 args   : [
-                        params: [
-                                $publicIds: taskPublicIds
-                        ],
                         query : [
                                 "q/from"  : "Main/Task",
                                 "q/where" : ["q/in", "fibery/public-id", "\$publicIds"],
                                 "q/limit" : "q/no-limit",
                                 "q/select": ["fibery/id", "fibery/public-id", ["workflow/state": ["enum/name", "fibery/id"]]]
+                        ],
+                        params: [
+                                $publicIds: taskPublicIds
                         ]
                 ]
         ]
