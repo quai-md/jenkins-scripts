@@ -54,14 +54,14 @@ public class FiberyTransaction extends Transaction_JSON {
 
     public class WorkflowState {
         @SerializedName("workflow/state")
-        String[] state = {"enum/name", "fibery/id"};
+        String[] state = ["enum/name", "fibery/id"];
     }
 
     public class Query {
         @SerializedName("q/from")
         String from = "Main/Task";
         @SerializedName("q/where")
-        String[] where = {"q/in", "fibery/public-id", "$publicIds"};
+        String[] where = ["q/in", "fibery/public-id", "$publicIds"];
         @SerializedName("q/limit")
         String limit = "q/no-limit";
         @SerializedName("q/select")
@@ -139,14 +139,14 @@ public class FiberyTransaction extends Transaction_JSON {
 
     //######################## Functionality ########################
     public void queryTasks(String[] taskPublicIds) {
-        FiberyQueryParams[] body = {new FiberyQueryParams(taskPublicIds)};
+        FiberyQueryParams[] body = [new FiberyQueryParams(taskPublicIds)];
         String URL = "https://quai.fibery.io/api/commands";
         createRequest()
                 .setMethod(HttpMethod.Post)
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(body))
-                .execute(new JsonHttpResponseListener<>(FiberyQueryResponse[].class) {
+                .execute(new JsonHttpResponseListener(FiberyQueryResponse[].class) {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, FiberyQueryResponse[] responseBody) {
                         FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
@@ -197,7 +197,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(commands))
-                .execute(new JsonHttpResponseListener<>(FiberyUpdateResponse[].class) {
+                .execute(new JsonHttpResponseListener(FiberyUpdateResponse[].class) {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, FiberyUpdateResponse[] responseBody) {
                         FiberyTransaction.this.onTasksPromoted(responseBody);
