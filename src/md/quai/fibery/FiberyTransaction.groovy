@@ -25,20 +25,14 @@ public class FiberyTransaction extends Transaction_JSON {
         this.token = token;
         this.allowedStates = new HashMap<String, List<String>>();
         this.promoteToState = new HashMap<String, String>();
-        this.initAllowedStates(this.allowedStates);
-        this.initPromoteToState(this.promoteToState);
-    }
 
-    private void initAllowedStates(HashMap<String, List<String>> allowedStates) {
-//        List<String> devAllowedIds = Arrays.asList(FiberyModule.readyForDevId, FiberyModule.inProgressId);
-//        List<String> stgAllowedIds = Arrays.asList(FiberyModule.devDoneId);
-//        List<String> prodAllowedIds = Arrays.asList(FiberyModule.validatedInStg);
-//        allowedStates.put("DEV", devAllowedIds);
-//        allowedStates.put("STG", stgAllowedIds);
-//        allowedStates.put("PROD", prodAllowedIds);
-    }
+        List<String> devAllowedIds = Arrays.asList(FiberyModule.readyForDevId, FiberyModule.inProgressId);
+        List<String> stgAllowedIds = Arrays.asList(FiberyModule.devDoneId);
+        List<String> prodAllowedIds = Arrays.asList(FiberyModule.validatedInStg);
+        allowedStates.put("DEV", devAllowedIds);
+        allowedStates.put("STG", stgAllowedIds);
+        allowedStates.put("PROD", prodAllowedIds);
 
-    private void initPromoteToState(HashMap<String, String> promoteToState) {
         promoteToState.put("DEV", FiberyModule.devDoneId);
         promoteToState.put("STG", FiberyModule.toValidateInStg);
         promoteToState.put("PROD", FiberyModule.toValidateInProd);
