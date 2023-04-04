@@ -149,7 +149,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(body))
-                .execute(new JsonHttpResponseListener() {
+                .execute(new JsonHttpResponseListener(FiberyQueryResponse[]) {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, FiberyQueryResponse[] responseBody) {
                         FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
@@ -200,7 +200,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(commands))
-                .execute(new JsonHttpResponseListener() {
+                .execute(new JsonHttpResponseListener(FiberyUpdateResponse[]) {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, FiberyUpdateResponse[] responseBody) {
                         FiberyTransaction.this.onTasksPromoted(responseBody);
