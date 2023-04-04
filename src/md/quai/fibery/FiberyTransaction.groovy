@@ -143,6 +143,7 @@ public class FiberyTransaction extends Transaction_JSON {
     //######################## Functionality ########################
 
     public void queryTasks(String[] taskPublicIds) {
+        System.out.println('############# HERE #############')
         def _body = [
                 command: "fibery.entity/query",
                 args   : [
