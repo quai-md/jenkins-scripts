@@ -25,7 +25,7 @@ public class FiberyModule extends Module {
     }
 
     public String[] promoteTasks(String[] taskPublicIds) {
-        System.out.println('############# HERE - promoteTasks #############')
+        this.logInfo('############# HERE - promoteTasks #############')
         FiberyTransaction transaction = new FiberyTransaction(token);
         transaction.queryTasks(taskPublicIds);
         return taskPublicIds;
