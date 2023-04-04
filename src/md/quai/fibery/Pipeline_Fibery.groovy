@@ -3,6 +3,7 @@ package md.quai.fibery
 import com.nu.art.http.HttpModule
 import com.nu.art.pipeline.workflow.BasePipeline
 import md.quai.fibery.FiberyModule
+import com.nu.art.pipeline.workflow.WorkflowModule
 
 @Grab('com.nu-art-software:http-module:+')
 
