@@ -165,6 +165,7 @@ public class FiberyTransaction extends Transaction_JSON {
                     }
 
                     void onError(HttpResponse httpResponse, String errorAsString) {
+                        this.logError('############# HERE - ERROR #############')
                         System.out.println(httpResponse.responseCode);
                     }
                 });
