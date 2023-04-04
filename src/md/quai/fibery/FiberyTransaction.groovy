@@ -5,6 +5,7 @@ import com.nu.art.core.exceptions.runtime.BadImplementationException
 import com.nu.art.http.HttpResponse
 import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.consts.HttpMethod
+import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
 
 import java.util.ArrayList
 import java.util.Arrays
@@ -16,12 +17,13 @@ import java.util.List
 public class FiberyTransaction extends Transaction_JSON {
 
     //######################## Params ########################
+
     private final HashMap<String, List<String>> allowedStates;
     private final HashMap<String, String> promoteToState;
-
     private final String token;
 
     //######################## Init ########################
+
     public FiberyTransaction(String token) {
         this.token = token;
         this.allowedStates = new HashMap<>();
@@ -46,6 +48,7 @@ public class FiberyTransaction extends Transaction_JSON {
     }
 
     //######################## Query Classes ########################
+
     private Object[] getSelect() {
         HashMap toRet = new HashMap();
         toRet.put(1, "fibery/id");
@@ -140,6 +143,7 @@ public class FiberyTransaction extends Transaction_JSON {
     }
 
     //######################## Functionality ########################
+
     public void queryTasks(String[] taskPublicIds) {
         FiberyQueryParams[] body = [new FiberyQueryParams(taskPublicIds)];
         String URL = "https://quai.fibery.io/api/commands";
