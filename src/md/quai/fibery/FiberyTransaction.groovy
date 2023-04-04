@@ -5,10 +5,13 @@ import com.nu.art.http.HttpResponse
 import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
 import com.nu.art.http.consts.HttpMethod
+import groovy.lang.Grab
 
 import java.util.Arrays
 import java.util.HashMap
 import java.util.List
+
+@Grab('com.nu-art-software:http-module:1.2.34')
 
 public class FiberyTransaction extends Transaction_JSON {
 
