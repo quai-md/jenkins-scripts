@@ -49,57 +49,57 @@ public class FiberyTransaction extends Transaction_JSON {
 
     //######################## Query Classes ########################
 
-    private Object[] getSelect() {
-        HashMap toRet = new HashMap();
-        toRet.put(1, "fibery/id");
-        toRet.put(2, "fibery/public-id");
-        toRet.put(3, new WorkflowState());
-        return toRet.values().toArray();
-    }
-
-    public class WorkflowState {
-        @SerializedName("workflow/state")
-        String[] state = ["enum/name", "fibery/id"];
-    }
-
-    public class Query {
-        @SerializedName("q/from")
-        String from = "Main/Task";
-        @SerializedName("q/where")
-        String[] where = ["q/in", "fibery/public-id", "$publicIds"];
-        @SerializedName("q/limit")
-        String limit = "q/no-limit";
-        @SerializedName("q/select")
-        Object[] select = getSelect();
-    }
-
-    public class Params {
-        @SerializedName("$publicIds")
-        String[] publicIds;
-
-        public Params(String[] ids) {
-            this.publicIds = ids;
-        }
-    }
-
-    public class FiberyQueryArgs {
-        Query query;
-        Params params;
-
-        public FiberyQueryArgs(String[] ids) {
-            this.query = new Query();
-            this.params = new Params(ids);
-        }
-    }
-
-    public class FiberyQueryParams {
-        public String command = "fibery.entity/query";
-        public Object args;
-
-        public FiberyQueryParams(String[] ids) {
-            this.args = new FiberyQueryArgs(ids);
-        }
-    }
+//    private Object[] getSelect() {
+//        HashMap toRet = new HashMap();
+//        toRet.put(1, "fibery/id");
+//        toRet.put(2, "fibery/public-id");
+//        toRet.put(3, new WorkflowState());
+//        return toRet.values().toArray();
+//    }
+//
+//    public class WorkflowState {
+//        @SerializedName("workflow/state")
+//        String[] state = ["enum/name", "fibery/id"];
+//    }
+//
+//    public class Query {
+//        @SerializedName("q/from")
+//        String from = "Main/Task";
+//        @SerializedName("q/where")
+//        String[] where = ["q/in", "fibery/public-id", "$publicIds"];
+//        @SerializedName("q/limit")
+//        String limit = "q/no-limit";
+//        @SerializedName("q/select")
+//        Object[] select = getSelect();
+//    }
+//
+//    public class Params {
+//        @SerializedName("$publicIds")
+//        String[] publicIds;
+//
+//        public Params(String[] ids) {
+//            this.publicIds = ids;
+//        }
+//    }
+//
+//    public class FiberyQueryArgs {
+//        Query query;
+//        Params params;
+//
+//        public FiberyQueryArgs(String[] ids) {
+//            this.query = new Query();
+//            this.params = new Params(ids);
+//        }
+//    }
+//
+//    public class FiberyQueryParams {
+//        public String command = "fibery.entity/query";
+//        public Object args;
+//
+//        public FiberyQueryParams(String[] ids) {
+//            this.args = new FiberyQueryArgs(ids);
+//        }
+//    }
 
     //######################## Update Classes ########################
 
@@ -145,13 +145,27 @@ public class FiberyTransaction extends Transaction_JSON {
     //######################## Functionality ########################
 
     public void queryTasks(String[] taskPublicIds) {
-        FiberyQueryParams[] body = [new FiberyQueryParams(taskPublicIds)];
+        def _body = [
+                command: "fibery.entity/query",
+                args   : [
+                        params: [
+                                $publicIds: taskPublicIds
+                        ],
+                        query : [
+                                "q/from"  : "Main/Task",
+                                "q/where" : ["q/in", "fibery/public-id", "$publicIds"],
+                                "q/limit" : "q/no-limit",
+                                "q/select": ["fibery/id", "fibery/public-id", ["workflow/state": ["enum/name", "fibery/id"]]]
+                        ]
+                ]
+        ]
+//        FiberyQueryParams[] body = [new FiberyQueryParams(taskPublicIds)];
         String URL = "https://quai.fibery.io/api/commands";
         createRequest()
                 .setMethod(HttpMethod.Post)
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
-                .setBody(gson.toJson(body))
+                .setBody(gson.toJson(_body))
                 .execute(new JsonHttpResponseListener(HashMap[].class) {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, HashMap[] responseBody) {
