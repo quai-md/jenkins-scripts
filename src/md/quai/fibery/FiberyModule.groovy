@@ -3,6 +3,8 @@ package md.quai.fibery;
 import com.nu.art.modular.core.Module
 import md.quai.fibery.FiberyTransaction
 
+@Grab('com.nu-art-software:http-module:+')
+
 public class FiberyModule extends Module {
     public static final String readyForDevId = "830ad041-f267-11ec-8e36-eb41e3940f9d";
     public static final String devDoneId = "939a50c1-f267-11ec-8e36-eb41e3940f9d";

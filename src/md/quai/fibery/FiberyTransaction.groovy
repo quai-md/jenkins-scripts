@@ -10,7 +10,6 @@ import java.util.Arrays
 import java.util.HashMap
 import java.util.List
 
-@Grab('com.nu-art-software:http-module:+')
 
 public class FiberyTransaction extends Transaction_JSON {
 
