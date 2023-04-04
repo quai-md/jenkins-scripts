@@ -6,7 +6,6 @@ import com.nu.art.http.HttpResponse
 import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.consts.HttpMethod
 import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
-import md.quai.fibery.FiberyQueryResponse_Result
 
 import java.util.ArrayList
 import java.util.Arrays
