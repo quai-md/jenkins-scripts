@@ -167,13 +167,11 @@ public class FiberyTransaction extends Transaction_JSON {
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(_body))
                 .execute(new JsonHttpResponseListener(HashMap[].class) {
-                    @Override
-                    public void onSuccess(HttpResponse httpResponse, HashMap[] responseBody) {
+                    void onSuccess(HttpResponse httpResponse, HashMap[] responseBody) {
 //                        FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
                     }
 
-                    @Override
-                    public void onError(HttpResponse httpResponse, String errorAsString) {
+                    void onError(HttpResponse httpResponse, String errorAsString) {
                         System.out.println(httpResponse.responseCode);
                     }
                 });
