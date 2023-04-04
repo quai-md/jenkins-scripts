@@ -137,20 +137,20 @@ public class FiberyTransaction extends Transaction_JSON {
 
     public void queryTasks(String[] taskPublicIds) {
         this.logInfo('############# HERE - queryTasks #############')
-        def body = [
-                command: "fibery.entity/query",
-                args   : [
-                        query : [
-                                "q/from"  : "Main/Task",
-                                "q/where" : ["q/in", "fibery/public-id", "\$publicIds"],
-                                "q/limit" : "q/no-limit",
-                                "q/select": ["fibery/id", "fibery/public-id", ["workflow/state": ["enum/name", "fibery/id"]]]
-                        ],
-                        params: [
-                                $publicIds: taskPublicIds
-                        ]
-                ]
-        ]
+        def body = [[
+                            command: "fibery.entity/query",
+                            args   : [
+                                    query : [
+                                            "q/from"  : "Main/Task",
+                                            "q/where" : ["q/in", "fibery/public-id", "\$publicIds"],
+                                            "q/limit" : "q/no-limit",
+                                            "q/select": ["fibery/id", "fibery/public-id", ["workflow/state": ["enum/name", "fibery/id"]]]
+                                    ],
+                                    params: [
+                                            $publicIds: taskPublicIds
+                                    ]
+                            ]
+                    ]]
         String URL = "https://quai.fibery.io/api/commands";
         var response = createRequest()
                 .setMethod(HttpMethod.Post)
