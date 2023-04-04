@@ -17,8 +17,9 @@ public class FiberyModule extends Module {
     @Override
     protected void init() {}
 
-    public void setToken(String token) {
+    public FiberyModule setToken(String token) {
         this.token = token;
+        return this;
     }
 
     public String[] promoteTasks(String[] taskPublicIds) {

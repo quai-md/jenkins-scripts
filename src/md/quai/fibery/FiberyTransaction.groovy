@@ -1,13 +1,11 @@
 package md.quai.fibery
 
 import com.google.gson.annotations.SerializedName
-import com.nu.art.core.exceptions.runtime.BadImplementationException
 import com.nu.art.http.HttpResponse
 import com.nu.art.http.Transaction_JSON
-import com.nu.art.http.consts.HttpMethod
 import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
+import com.nu.art.http.consts.HttpMethod
 
-import java.util.ArrayList
 import java.util.Arrays
 import java.util.HashMap
 import java.util.List
@@ -26,8 +24,8 @@ public class FiberyTransaction extends Transaction_JSON {
 
     public FiberyTransaction(String token) {
         this.token = token;
-        this.allowedStates = new HashMap<>();
-        this.promoteToState = new HashMap<>();
+        this.allowedStates = new HashMap<String, List<String>>();
+        this.promoteToState = new HashMap<String, String>();
         this.initAllowedStates(this.allowedStates);
         this.initPromoteToState(this.promoteToState);
     }
