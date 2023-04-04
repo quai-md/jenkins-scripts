@@ -1,6 +1,8 @@
 package md.quai.fibery;
 
-import com.nu.art.modular.core.Module;
+import com.nu.art.modular.core.Module
+
+@Grab('com.google.code.gson:gson:2.7+')
 
 public class FiberyModule extends Module {
     public static final String readyForDevId = "830ad041-f267-11ec-8e36-eb41e3940f9d";
@@ -15,11 +17,11 @@ public class FiberyModule extends Module {
     @Override
     protected void init() {}
 
-    public void setToken (String token) {
+    public void setToken(String token) {
         this.token = token;
     }
 
-    public String[] promoteTasks (String[] taskPublicIds) {
+    public String[] promoteTasks(String[] taskPublicIds) {
         FiberyTransaction transaction = new FiberyTransaction(token);
         transaction.queryTasks(taskPublicIds);
         return taskPublicIds;
