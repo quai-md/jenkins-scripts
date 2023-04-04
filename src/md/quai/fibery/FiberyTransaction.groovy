@@ -167,7 +167,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(_body))
                 .execute(new JsonHttpResponseListener(HashMap[].class) {
-                    void onSuccess(HttpResponse httpResponse, HashMap[] responseBody) {
+                    void onSuccess(HttpResponse httpResponse, responseBody) {
 //                        FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
                     }
 
