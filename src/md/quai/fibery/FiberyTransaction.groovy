@@ -137,7 +137,7 @@ public class FiberyTransaction extends Transaction_JSON {
 
     public void queryTasks(String[] taskPublicIds) {
         this.logInfo('############# HERE - queryTasks #############')
-        def _body = [
+        def body = [
                 command: "fibery.entity/query",
                 args   : [
                         params: [
@@ -151,15 +151,16 @@ public class FiberyTransaction extends Transaction_JSON {
                         ]
                 ]
         ]
-//        FiberyQueryParams[] body = [new FiberyQueryParams(taskPublicIds)];
         String URL = "https://quai.fibery.io/api/commands";
         createRequest()
                 .setMethod(HttpMethod.Post)
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
-                .setBody(gson.toJson(_body))
+                .setBody(gson.toJson(body))
                 .execute(new JsonHttpResponseListener(HashMap[].class) {
                     void onSuccess(HttpResponse httpResponse, responseBody) {
+                        this.logInfo('############# HERE - SUCCESS #############')
+                        this.logInfo(responseBody[0].result)
 //                        FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
                     }
 
