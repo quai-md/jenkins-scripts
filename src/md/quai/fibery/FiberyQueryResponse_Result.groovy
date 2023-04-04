@@ -1,4 +1,4 @@
-@Grab('com.google.code.gson:gson:2.8.6')
+@Grab('com.google.code.gson:gson:2.7+')
 import com.google.gson.annotations.SerializedName
 
 class FiberyQueryResponse_Result {
