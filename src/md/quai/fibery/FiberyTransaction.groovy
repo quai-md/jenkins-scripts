@@ -149,7 +149,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(body))
-                .execute(new JsonHttpResponseListener(FiberyQueryResponse[].class) {
+                .execute(new JsonHttpResponseListener() {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, FiberyQueryResponse[] responseBody) {
                         FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
@@ -173,7 +173,7 @@ public class FiberyTransaction extends Transaction_JSON {
         this.logInfo("Task Validation - Validating all tasks are in a state approved for this branch");
         List<String> nonPassingTaskIds = new ArrayList<String>();
 
-        for (FiberyQueryResponse.FiberyQueryResponse_Result task : tasks) {
+        for (FiberyQueryResponse_Result task : tasks) {
             if (!this.allowedStates.get(env).contains(task.state.id))
                 nonPassingTaskIds.add(task.publicId);
         }
@@ -200,7 +200,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(commands))
-                .execute(new JsonHttpResponseListener(FiberyUpdateResponse[].class) {
+                .execute(new JsonHttpResponseListener() {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, FiberyUpdateResponse[] responseBody) {
                         FiberyTransaction.this.onTasksPromoted(responseBody);
