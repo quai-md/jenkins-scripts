@@ -19,6 +19,7 @@ public class FiberyModule extends Module {
     protected void init() {}
 
     public FiberyModule setToken(String token) {
+        System.out.println('############# HERE - token #############')
         this.token = token;
         return this;
     }
