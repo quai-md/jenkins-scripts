@@ -6,6 +6,7 @@ import com.nu.art.http.HttpResponse
 import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.consts.HttpMethod
 import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
+import md.quai.fibery.FiberyQueryResponse_Result
 
 import java.util.ArrayList
 import java.util.Arrays
@@ -152,10 +153,10 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(body))
-                .execute(new JsonHttpResponseListener() {
+                .execute(new JsonHttpResponseListener(HashMap[].class) {
                     @Override
-                    public void onSuccess(HttpResponse httpResponse, FiberyQueryResponse[] responseBody) {
-                        FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
+                    public void onSuccess(HttpResponse httpResponse, HashMap[] responseBody) {
+//                        FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
                     }
 
                     @Override
@@ -165,59 +166,59 @@ public class FiberyTransaction extends Transaction_JSON {
                 });
     }
 
-    private void handleQueryOnSuccess(FiberyQueryResponse_Result[] tasks) {
-        String env = "DEV";
-        this.logInfo("Deploying branch" + env);
-        this.validateTaskStates(tasks, env);
-        this.promoteTasks(tasks, env);
-    }
+//    private void handleQueryOnSuccess(FiberyQueryResponse_Result[] tasks) {
+//        String env = "DEV";
+//        this.logInfo("Deploying branch" + env);
+//        this.validateTaskStates(tasks, env);
+//        this.promoteTasks(tasks, env);
+//    }
+//
+//    private void validateTaskStates(FiberyQueryResponse_Result[] tasks, String env) {
+//        this.logInfo("Task Validation - Validating all tasks are in a state approved for this branch");
+//        List<String> nonPassingTaskIds = new ArrayList<String>();
+//
+//        for (FiberyQueryResponse_Result task : tasks) {
+//            if (!this.allowedStates.get(env).contains(task.state.id))
+//                nonPassingTaskIds.add(task.publicId);
+//        }
+//
+//        if (nonPassingTaskIds.size() > 0) {
+//            String error = String.format("Tasks with invalid states: %s", String.join(",", nonPassingTaskIds));
+//            throw new BadImplementationException(error);
+//        }
+//        this.logInfo("Task Validation - All tasks are okay!");
+//    }
+//
+//    private void promoteTasks(FiberyQueryResponse_Result[] tasks, String env) {
+//        this.logInfo("Promoting Tasks");
+//        List<FiberyUpdateParams> commands = new ArrayList<>();
+//        String URL = "https://quai.fibery.io/api/commands";
+//        String promoteToId = this.promoteToState.get(env);
+//
+//        for (FiberyQueryResponse_Result task : tasks) {
+//            commands.add(new FiberyUpdateParams(task.id, promoteToId));
+//        }
+//
+//        createRequest()
+//                .setMethod(HttpMethod.Post)
+//                .setUrl(URL)
+//                .addHeader("Authorization", "Token " + token)
+//                .setBody(gson.toJson(commands))
+//                .execute(new JsonHttpResponseListener(HashMap.class) {
+//                    @Override
+//                    public void onSuccess(HttpResponse httpResponse, HashMap[] responseBody) {
+//                        FiberyTransaction.this.onTasksPromoted(responseBody);
+//                    }
+//
+//                    @Override
+//                    public void onError(HttpResponse httpResponse, String errorAsString) {
+//                        System.out.println(httpResponse.responseCode);
+//                    }
+//                });
+//    }
 
-    private void validateTaskStates(FiberyQueryResponse_Result[] tasks, String env) {
-        this.logInfo("Task Validation - Validating all tasks are in a state approved for this branch");
-        List<String> nonPassingTaskIds = new ArrayList<String>();
-
-        for (FiberyQueryResponse_Result task : tasks) {
-            if (!this.allowedStates.get(env).contains(task.state.id))
-                nonPassingTaskIds.add(task.publicId);
-        }
-
-        if (nonPassingTaskIds.size() > 0) {
-            String error = String.format("Tasks with invalid states: %s", String.join(",", nonPassingTaskIds));
-            throw new BadImplementationException(error);
-        }
-        this.logInfo("Task Validation - All tasks are okay!");
-    }
-
-    private void promoteTasks(FiberyQueryResponse_Result[] tasks, String env) {
-        this.logInfo("Promoting Tasks");
-        List<FiberyUpdateParams> commands = new ArrayList<>();
-        String URL = "https://quai.fibery.io/api/commands";
-        String promoteToId = this.promoteToState.get(env);
-
-        for (FiberyQueryResponse_Result task : tasks) {
-            commands.add(new FiberyUpdateParams(task.id, promoteToId));
-        }
-
-        createRequest()
-                .setMethod(HttpMethod.Post)
-                .setUrl(URL)
-                .addHeader("Authorization", "Token " + token)
-                .setBody(gson.toJson(commands))
-                .execute(new JsonHttpResponseListener() {
-                    @Override
-                    public void onSuccess(HttpResponse httpResponse, FiberyUpdateResponse[] responseBody) {
-                        FiberyTransaction.this.onTasksPromoted(responseBody);
-                    }
-
-                    @Override
-                    public void onError(HttpResponse httpResponse, String errorAsString) {
-                        System.out.println(httpResponse.responseCode);
-                    }
-                });
-    }
-
-    private void onTasksPromoted(FiberyUpdateResponse[] response) {
-        this.logInfo("Tasks Promoted");
-        System.out.println(gson.toJson(response));
-    }
+//    private void onTasksPromoted(FiberyUpdateResponse[] response) {
+//        this.logInfo("Tasks Promoted");
+//        System.out.println(gson.toJson(response));
+//    }
 }
