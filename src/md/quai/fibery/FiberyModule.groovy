@@ -1,6 +1,7 @@
 package md.quai.fibery;
 
 import com.nu.art.modular.core.Module
+import md.quai.fibery.FiberyTransaction
 
 @Grab('com.google.code.gson:gson:2.7+')
 
