@@ -1,6 +1,5 @@
-import com.google.gson.annotations.SerializedName
-
 @Grab('com.google.code.gson:gson:2.8.6')
+import com.google.gson.annotations.SerializedName
 
 class FiberyQueryResponse_Result {
     @SerializedName("fibery/public-id")
