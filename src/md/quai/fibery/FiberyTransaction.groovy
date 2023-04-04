@@ -152,24 +152,27 @@ public class FiberyTransaction extends Transaction_JSON {
                 ]
         ]
         String URL = "https://quai.fibery.io/api/commands";
-        createRequest()
+        var response = createRequest()
                 .setMethod(HttpMethod.Post)
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(body))
-                .executeSync(new JsonHttpResponseListener(HashMap[].class) {
-
-                    void onSuccess(HttpResponse httpResponse, responseBody) {
-                        this.logInfo('############# HERE - SUCCESS #############')
-                        this.logInfo(responseBody[0].result)
-//                        FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
-                    }
-
-                    void onError(HttpResponse httpResponse, String errorAsString) {
-                        this.logError('############# HERE - ERROR #############')
-                        System.out.println(httpResponse.responseCode);
-                    }
-                });
+                .executeSync()
+//                .executeSync(new JsonHttpResponseListener(HashMap[].class) {
+//
+//                    void onSuccess(HttpResponse httpResponse, responseBody) {
+//                        this.logInfo('############# HERE - SUCCESS #############')
+//                        this.logInfo(responseBody[0].result)
+////                        FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
+//                    }
+//
+//                    void onError(HttpResponse httpResponse, String errorAsString) {
+//                        this.logError('############# HERE - ERROR #############')
+//                        System.out.println(httpResponse.responseCode);
+//                    }
+//                });
+        this.logInfo("############# HERE - response #############")
+        this.logInfo(response)
     }
 
 //    private void handleQueryOnSuccess(FiberyQueryResponse_Result[] tasks) {
