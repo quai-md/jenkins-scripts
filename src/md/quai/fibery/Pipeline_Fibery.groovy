@@ -1,3 +1,5 @@
+package md.quai.fibery
+
 import com.nu.art.http.HttpModule
 import com.nu.art.pipeline.workflow.BasePipeline
 import md.quai.fibery.FiberyModule
