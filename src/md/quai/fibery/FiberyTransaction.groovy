@@ -1,5 +1,6 @@
 package md.quai.fibery;
 
+
 import com.google.gson.annotations.SerializedName;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.http.HttpResponse;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+@groovy.lang.Grab('com.nu-art-software:http-module:1.2.34')
 
 public class FiberyTransaction extends Transaction_JSON {
 
