@@ -162,14 +162,14 @@ public class FiberyTransaction extends Transaction_JSON {
                 });
     }
 
-    private void handleQueryOnSuccess(FiberyQueryResponse.FiberyQueryResponse_Result[] tasks) {
+    private void handleQueryOnSuccess(FiberyQueryResponse_Result[] tasks) {
         String env = "DEV";
         this.logInfo("Deploying branch" + env);
         this.validateTaskStates(tasks, env);
         this.promoteTasks(tasks, env);
     }
 
-    private void validateTaskStates(FiberyQueryResponse.FiberyQueryResponse_Result[] tasks, String env) {
+    private void validateTaskStates(FiberyQueryResponse_Result[] tasks, String env) {
         this.logInfo("Task Validation - Validating all tasks are in a state approved for this branch");
         List<String> nonPassingTaskIds = new ArrayList<String>();
 
@@ -185,13 +185,13 @@ public class FiberyTransaction extends Transaction_JSON {
         this.logInfo("Task Validation - All tasks are okay!");
     }
 
-    private void promoteTasks(FiberyQueryResponse.FiberyQueryResponse_Result[] tasks, String env) {
+    private void promoteTasks(FiberyQueryResponse_Result[] tasks, String env) {
         this.logInfo("Promoting Tasks");
         List<FiberyUpdateParams> commands = new ArrayList<>();
         String URL = "https://quai.fibery.io/api/commands";
         String promoteToId = this.promoteToState.get(env);
 
-        for (FiberyQueryResponse.FiberyQueryResponse_Result task : tasks) {
+        for (FiberyQueryResponse_Result task : tasks) {
             commands.add(new FiberyUpdateParams(task.id, promoteToId));
         }
 
