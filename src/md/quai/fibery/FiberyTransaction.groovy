@@ -5,14 +5,16 @@ import com.google.gson.annotations.SerializedName;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.http.HttpResponse;
 import com.nu.art.http.Transaction_JSON;
-import com.nu.art.http.consts.HttpMethod;
+import com.nu.art.http.consts.HttpMethod
+import groovy.lang.Grab;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-@groovy.lang.Grab('com.nu-art-software:http-module:1.2.34')
+@Grab('com.nu-art-software:http-module:1.2.34')
+@Grab('com.google.code.gson:gson:2.8.6')
 
 public class FiberyTransaction extends Transaction_JSON {
 
@@ -149,7 +151,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(body))
-                .execute(new JsonHttpResponseListener(FiberyQueryResponse[]) {
+                .execute(new JsonHttpResponseListener() {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, FiberyQueryResponse[] responseBody) {
                         FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
@@ -200,7 +202,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(commands))
-                .execute(new JsonHttpResponseListener(FiberyUpdateResponse[]) {
+                .execute(new JsonHttpResponseListener() {
                     @Override
                     public void onSuccess(HttpResponse httpResponse, FiberyUpdateResponse[] responseBody) {
                         FiberyTransaction.this.onTasksPromoted(responseBody);
