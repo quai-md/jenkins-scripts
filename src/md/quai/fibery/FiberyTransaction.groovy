@@ -29,6 +29,7 @@ public class FiberyTransaction extends Transaction_JSON {
         List<String> devAllowedIds = Arrays.asList(FiberyModule.readyForDevId, FiberyModule.inProgressId);
         List<String> stgAllowedIds = Arrays.asList(FiberyModule.devDoneId);
         List<String> prodAllowedIds = Arrays.asList(FiberyModule.validatedInStg);
+
         allowedStates.put("DEV", devAllowedIds);
         allowedStates.put("STG", stgAllowedIds);
         allowedStates.put("PROD", prodAllowedIds);
@@ -171,7 +172,7 @@ public class FiberyTransaction extends Transaction_JSON {
 
         data.each { query ->
             query.result.each { result ->
-                if (!validateTaskState(result, "dev"))
+                if (!validateTaskState(result, "DEV"))
                     nonPassingTaskIds.add(result["fibery/public-id"]);
             }
         }
