@@ -172,7 +172,7 @@ public class FiberyTransaction extends Transaction_JSON {
 //                    }
 //                });
         this.logInfo("############# HERE - response #############")
-        this.logInfo(response.getAt(0))
+        this.logInfo(response)
     }
 
 //    private void handleQueryOnSuccess(FiberyQueryResponse_Result[] tasks) {
