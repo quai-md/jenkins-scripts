@@ -5,6 +5,7 @@ import com.nu.art.http.HttpResponse
 import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
 import com.nu.art.http.consts.HttpMethod
+import com.nu.art.core.tools.StreamTools
 
 import java.util.Arrays
 import java.util.HashMap
@@ -152,7 +153,7 @@ public class FiberyTransaction extends Transaction_JSON {
                             ]
                     ]]
         String URL = "https://quai.fibery.io/api/commands";
-        def response = createRequest()
+        def stream = createRequest()
                 .setMethod(HttpMethod.Post)
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
@@ -171,6 +172,7 @@ public class FiberyTransaction extends Transaction_JSON {
 //                        System.out.println(httpResponse.responseCode);
 //                    }
 //                });
+        def response = StreamTools.readFullyAsString(stream);
         this.logInfo("############# HERE - response #############")
         this.logInfo(response)
     }
