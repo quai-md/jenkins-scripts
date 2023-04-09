@@ -163,9 +163,28 @@ public class FiberyTransaction extends Transaction_JSON {
                 .executeSync()
 
         def responseAsString = StreamTools.readFullyAsString(stream);
+
+        this.logInfo("############# HERE - response as string #############")
+        this.logInfo(responseAsString);
+
+        this.logInfo("############# HERE - Task Validation #############");
+
         def data = new JsonSlurper().parseText(responseAsString);
-        this.logInfo("############# HERE - response #############")
-        this.logInfo(data[0])
+        List<String> nonPassingTaskIds = new ArrayList<String>();
+
+        data.each { query ->
+            query.result.each { result ->
+                if (!validateTaskState(result, "dev"))
+                    nonPassingTaskIds.add(result["fibery/public-id"]);
+            }
+        }
+
+        if (nonPassingTaskIds.size() > 0) {
+            String error = String.format("Tasks with invalid states: %s", String.join(",", nonPassingTaskIds));
+            throw new BadImplementationException(error);
+        }
+
+        this.logInfo("Task Validation - All tasks are okay!");
     }
 
 //    private void handleQueryOnSuccess(FiberyQueryResponse_Result[] tasks) {
@@ -175,21 +194,10 @@ public class FiberyTransaction extends Transaction_JSON {
 //        this.promoteTasks(tasks, env);
 //    }
 //
-//    private void validateTaskStates(FiberyQueryResponse_Result[] tasks, String env) {
-//        this.logInfo("Task Validation - Validating all tasks are in a state approved for this branch");
-//        List<String> nonPassingTaskIds = new ArrayList<String>();
-//
-//        for (FiberyQueryResponse_Result task : tasks) {
-//            if (!this.allowedStates.get(env).contains(task.state.id))
-//                nonPassingTaskIds.add(task.publicId);
-//        }
-//
-//        if (nonPassingTaskIds.size() > 0) {
-//            String error = String.format("Tasks with invalid states: %s", String.join(",", nonPassingTaskIds));
-//            throw new BadImplementationException(error);
-//        }
-//        this.logInfo("Task Validation - All tasks are okay!");
-//    }
+    private boolean validateTaskState(def task, String env) {
+        String taskStateId = task["workflow/state"]["fibery/id"];
+        return this.allowedStates.get(env).contains(taskStateId);
+    }
 //
 //    private void promoteTasks(FiberyQueryResponse_Result[] tasks, String env) {
 //        this.logInfo("Promoting Tasks");
