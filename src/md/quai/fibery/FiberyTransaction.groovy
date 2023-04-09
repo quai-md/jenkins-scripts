@@ -7,6 +7,7 @@ import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
 import com.nu.art.http.consts.HttpMethod
 import com.nu.art.core.tools.StreamTools
 import com.google.gson.Gson
+import groovy.json.JsonSlurper
 
 import java.util.Arrays
 import java.util.HashMap
@@ -162,7 +163,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .executeSync()
 
         def responseAsString = StreamTools.readFullyAsString(stream);
-        def data = Gson.fromJson(responseAsString, HashMap.class);
+        def data = new JsonSlurper().parseText(responseAsString);
         this.logInfo("############# HERE - response #############")
         this.logInfo(data[0])
     }
