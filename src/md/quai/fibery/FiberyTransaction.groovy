@@ -1,18 +1,15 @@
 package md.quai.fibery
 
 import com.google.gson.annotations.SerializedName
-import com.nu.art.http.HttpResponse
-import com.nu.art.http.Transaction_JSON
-import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
-import com.nu.art.http.consts.HttpMethod
 import com.nu.art.core.tools.StreamTools
-import com.google.gson.Gson
+import com.nu.art.http.Transaction_JSON
+import com.nu.art.http.consts.HttpMethod
+import com.nu.art.pipeline.exceptions.BadImplementationException
 import groovy.json.JsonSlurper
 
 import java.util.Arrays
 import java.util.HashMap
 import java.util.List
-
 
 public class FiberyTransaction extends Transaction_JSON {
 
