@@ -138,26 +138,26 @@ public class FiberyTransaction extends Transaction_JSON {
 
     public void queryTasks(String[] taskPublicIds) {
         this.logInfo('############# HERE - queryTasks #############')
-        def body = [[
-                            command: "fibery.entity/query",
-                            args   : [
-                                    query : [
-                                            "q/from"  : "Main/Task",
-                                            "q/where" : ["q/in", "fibery/public-id", "\$publicIds"],
-                                            "q/limit" : "q/no-limit",
-                                            "q/select": ["fibery/id", "fibery/public-id", ["workflow/state": ["enum/name", "fibery/id"]]]
-                                    ],
-                                    params: [
-                                            $publicIds: taskPublicIds
-                                    ]
-                            ]
-                    ]]
+        def queryBody = [[
+                                 command: "fibery.entity/query",
+                                 args   : [
+                                         query : [
+                                                 "q/from"  : "Main/Task",
+                                                 "q/where" : ["q/in", "fibery/public-id", "\$publicIds"],
+                                                 "q/limit" : "q/no-limit",
+                                                 "q/select": ["fibery/id", "fibery/public-id", ["workflow/state": ["enum/name", "fibery/id"]]]
+                                         ],
+                                         params: [
+                                                 $publicIds: taskPublicIds
+                                         ]
+                                 ]
+                         ]]
         String URL = "https://quai.fibery.io/api/commands";
         def stream = createRequest()
                 .setMethod(HttpMethod.Post)
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
-                .setBody(gson.toJson(body))
+                .setBody(gson.toJson(queryBody))
                 .executeSync()
 
         def responseAsString = StreamTools.readFullyAsString(stream);
@@ -167,12 +167,13 @@ public class FiberyTransaction extends Transaction_JSON {
 
         this.logInfo("############# HERE - Task Validation #############");
 
+        String env = "DEV"
         def data = new JsonSlurper().parseText(responseAsString);
         List<String> nonPassingTaskIds = new ArrayList<String>();
 
         data.each { query ->
             query.result.each { result ->
-                if (!validateTaskState(result, "DEV"))
+                if (!validateTaskState(result, env))
                     nonPassingTaskIds.add(result["fibery/public-id"]);
             }
         }
@@ -183,18 +184,46 @@ public class FiberyTransaction extends Transaction_JSON {
         }
 
         this.logInfo("Task Validation - All tasks are okay!");
+
+        this.logInfo("############# HERE - Task Promotion #############");
+        def updateBody = [];
+
+        data.each { query ->
+            query.result.each { result ->
+                updateBody.add(generateTaskPromotionQuery(result, env))
+            }
+        }
+
+        def updateStream = createRequest()
+                .setMethod(HttpMethod.Post)
+                .setUrl(URL)
+                .addHeader("Authorization", "Token " + token)
+                .setBody(gson.toJson(updateBody))
+                .executeSync()
+
+        def updateResponseAsString = StreamTools.readFullyAsString(updateStream);
+        this.logInfo("############# HERE - update response as string #############")
+        this.logInfo(updateResponseAsString);
+
     }
 
-//    private void handleQueryOnSuccess(FiberyQueryResponse_Result[] tasks) {
-//        String env = "DEV";
-//        this.logInfo("Deploying branch" + env);
-//        this.validateTaskStates(tasks, env);
-//        this.promoteTasks(tasks, env);
-//    }
-//
     private boolean validateTaskState(def task, String env) {
         String taskStateId = task["workflow/state"]["fibery/id"];
         return this.allowedStates.get(env).contains(taskStateId);
+    }
+
+    private LinkedHashMap<String, Object> generateTaskPromotionQuery(def task, String env) {
+        String promoteId = this.promoteToState.get(env);
+        return [
+                command: "fibery.entity/update",
+                args   : [
+                        "type"  : "Main/Task",
+                        "entity": [
+                                "fibery/id"     : "ed09bd10-7f90-11ed-beb6-d5e2cb5ace24",
+                                "workflow/state": ["fibery/id": promoteId]
+                        ]
+                ]
+        ]
     }
 //
 //    private void promoteTasks(FiberyQueryResponse_Result[] tasks, String env) {
@@ -223,10 +252,5 @@ public class FiberyTransaction extends Transaction_JSON {
 //                        System.out.println(httpResponse.responseCode);
 //                    }
 //                });
-//    }
-
-//    private void onTasksPromoted(FiberyUpdateResponse[] response) {
-//        this.logInfo("Tasks Promoted");
-//        System.out.println(gson.toJson(response));
 //    }
 }
