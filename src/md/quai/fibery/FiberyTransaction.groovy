@@ -6,6 +6,7 @@ import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.Transaction_JSON.JsonHttpResponseListener
 import com.nu.art.http.consts.HttpMethod
 import com.nu.art.core.tools.StreamTools
+import com.google.gson.Gson
 
 import java.util.Arrays
 import java.util.HashMap
@@ -159,22 +160,11 @@ public class FiberyTransaction extends Transaction_JSON {
                 .addHeader("Authorization", "Token " + token)
                 .setBody(gson.toJson(body))
                 .executeSync()
-//                .executeSync(new JsonHttpResponseListener(HashMap[].class) {
-//
-//                    void onSuccess(HttpResponse httpResponse, responseBody) {
-//                        this.logInfo('############# HERE - SUCCESS #############')
-//                        this.logInfo(responseBody[0].result)
-////                        FiberyTransaction.this.handleQueryOnSuccess(responseBody[0].result);
-//                    }
-//
-//                    void onError(HttpResponse httpResponse, String errorAsString) {
-//                        this.logError('############# HERE - ERROR #############')
-//                        System.out.println(httpResponse.responseCode);
-//                    }
-//                });
-        def response = StreamTools.readFullyAsString(stream);
+
+        def responseAsString = StreamTools.readFullyAsString(stream);
+        def data = Gson.fromString(responseAsString);
         this.logInfo("############# HERE - response #############")
-        this.logInfo(response)
+        this.logInfo(data[0])
     }
 
 //    private void handleQueryOnSuccess(FiberyQueryResponse_Result[] tasks) {
