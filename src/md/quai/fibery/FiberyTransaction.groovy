@@ -162,7 +162,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .executeSync()
 
         def responseAsString = StreamTools.readFullyAsString(stream);
-        def data = Gson.fromString(responseAsString);
+        def data = Gson.fromJson(responseAsString, HashMap.class);
         this.logInfo("############# HERE - response #############")
         this.logInfo(data[0])
     }
