@@ -20,7 +20,7 @@ public class FiberyTransaction extends Transaction_JSON {
 
     public FiberyTransaction(String token, String env) {
         this.token = token;
-        this.config = getModule(FiberyModule.class).envProjects(env);
+        this.config = getModule(FiberyModule.class).envProjects[env];
     }
 
     //######################## Functionality ########################
