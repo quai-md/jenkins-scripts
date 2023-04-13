@@ -5,37 +5,22 @@ import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.consts.HttpMethod
 import com.nu.art.pipeline.exceptions.BadImplementationException
 import groovy.json.JsonSlurper
+import md.quai.fibery.FiberyModule
 
-import java.util.Arrays
-import java.util.HashMap
 import java.util.List
 
 public class FiberyTransaction extends Transaction_JSON {
 
     //######################## Params ########################
 
-    private final HashMap<String, List<String>> allowedStates;
-    private final HashMap<String, String> promoteToState;
     private final String token;
+    private FiberyEnvConfig config;
 
     //######################## Init ########################
 
-    public FiberyTransaction(String token) {
+    public FiberyTransaction(String token, String env) {
         this.token = token;
-        this.allowedStates = new HashMap<String, List<String>>();
-        this.promoteToState = new HashMap<String, String>();
-
-        List<String> devAllowedIds = Arrays.asList(FiberyModule.readyForDevId, FiberyModule.inProgressId);
-        List<String> stgAllowedIds = Arrays.asList(FiberyModule.devDoneId);
-        List<String> prodAllowedIds = Arrays.asList(FiberyModule.validatedInStg);
-
-        allowedStates.put("DEV", devAllowedIds);
-        allowedStates.put("STG", stgAllowedIds);
-        allowedStates.put("PROD", prodAllowedIds);
-
-        promoteToState.put("DEV", FiberyModule.devDoneId);
-        promoteToState.put("STG", FiberyModule.toValidateInStg);
-        promoteToState.put("PROD", FiberyModule.toValidateInProd);
+        this.config = getModule(FiberyModule.class).envProjects(env);
     }
 
     //######################## Functionality ########################
@@ -71,13 +56,12 @@ public class FiberyTransaction extends Transaction_JSON {
 
         this.logInfo("############# HERE - Task Validation #############");
 
-        String env = "DEV"
         def data = new JsonSlurper().parseText(responseAsString);
         List<String> nonPassingTaskIds = new ArrayList<String>();
 
         data.each { query ->
             query.result.each { result ->
-                if (!validateTaskState(result, env))
+                if (!this.config.validateTask.call(result))
                     nonPassingTaskIds.add(result["fibery/public-id"]);
             }
         }
@@ -94,7 +78,7 @@ public class FiberyTransaction extends Transaction_JSON {
 
         data.each { query ->
             query.result.each { result ->
-                updateBody.add(generateTaskPromotionQuery(result, env))
+                updateBody.add(generateTaskPromotionQuery(result))
             }
         }
 
@@ -111,13 +95,8 @@ public class FiberyTransaction extends Transaction_JSON {
 
     }
 
-    private boolean validateTaskState(def task, String env) {
-        String taskStateId = task["workflow/state"]["fibery/id"];
-        return this.allowedStates.get(env).contains(taskStateId);
-    }
-
-    private LinkedHashMap<String, Object> generateTaskPromotionQuery(def task, String env) {
-        String promoteId = this.promoteToState.get(env);
+    private LinkedHashMap<String, Object> generateTaskPromotionQuery(def task) {
+        String promoteId = this.config.resolveTaskState.call(task)
         return [
                 command: "fibery.entity/update",
                 args   : [
@@ -129,32 +108,4 @@ public class FiberyTransaction extends Transaction_JSON {
                 ]
         ]
     }
-//
-//    private void promoteTasks(FiberyQueryResponse_Result[] tasks, String env) {
-//        this.logInfo("Promoting Tasks");
-//        List<FiberyUpdateParams> commands = new ArrayList<>();
-//        String URL = "https://quai.fibery.io/api/commands";
-//        String promoteToId = this.promoteToState.get(env);
-//
-//        for (FiberyQueryResponse_Result task : tasks) {
-//            commands.add(new FiberyUpdateParams(task.id, promoteToId));
-//        }
-//
-//        createRequest()
-//                .setMethod(HttpMethod.Post)
-//                .setUrl(URL)
-//                .addHeader("Authorization", "Token " + token)
-//                .setBody(gson.toJson(commands))
-//                .execute(new JsonHttpResponseListener(HashMap.class) {
-//                    @Override
-//                    public void onSuccess(HttpResponse httpResponse, HashMap[] responseBody) {
-//                        FiberyTransaction.this.onTasksPromoted(responseBody);
-//                    }
-//
-//                    @Override
-//                    public void onError(HttpResponse httpResponse, String errorAsString) {
-//                        System.out.println(httpResponse.responseCode);
-//                    }
-//                });
-//    }
 }

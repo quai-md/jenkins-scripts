@@ -13,6 +13,11 @@ public class FiberyModule extends Module {
     public static final String toValidateInProd = "6f480011-31b3-11ed-a2a4-9520bd30202b";
 
     private String token;
+    def envProjects = [:]
+
+    public void declareConfig(String env, FiberyEnvConfig config) {
+        envProjects[env] = config;
+    }
 
     @Override
     protected void init() {}
@@ -23,8 +28,9 @@ public class FiberyModule extends Module {
     }
 
     public String[] promoteTasks(String[] taskPublicIds) {
+        String env = new Var_Env("BRANCH_NAME").get();
         this.logInfo('############# HERE - promoteTasks #############')
-        FiberyTransaction transaction = new FiberyTransaction(token);
+        FiberyTransaction transaction = new FiberyTransaction(token, "dev");
         transaction.queryTasks(taskPublicIds);
         return taskPublicIds;
     }
