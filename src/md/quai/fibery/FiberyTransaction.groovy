@@ -1,6 +1,5 @@
 package md.quai.fibery
 
-import com.google.gson.annotations.SerializedName
 import com.nu.art.core.tools.StreamTools
 import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.consts.HttpMethod
@@ -37,101 +36,6 @@ public class FiberyTransaction extends Transaction_JSON {
         promoteToState.put("DEV", FiberyModule.devDoneId);
         promoteToState.put("STG", FiberyModule.toValidateInStg);
         promoteToState.put("PROD", FiberyModule.toValidateInProd);
-    }
-
-    //######################## Query Classes ########################
-
-//    private Object[] getSelect() {
-//        HashMap toRet = new HashMap();
-//        toRet.put(1, "fibery/id");
-//        toRet.put(2, "fibery/public-id");
-//        toRet.put(3, new WorkflowState());
-//        return toRet.values().toArray();
-//    }
-//
-//    public class WorkflowState {
-//        @SerializedName("workflow/state")
-//        String[] state = ["enum/name", "fibery/id"];
-//    }
-//
-//    public class Query {
-//        @SerializedName("q/from")
-//        String from = "Main/Task";
-//        @SerializedName("q/where")
-//        String[] where = ["q/in", "fibery/public-id", "$publicIds"];
-//        @SerializedName("q/limit")
-//        String limit = "q/no-limit";
-//        @SerializedName("q/select")
-//        Object[] select = getSelect();
-//    }
-//
-//    public class Params {
-//        @SerializedName("$publicIds")
-//        String[] publicIds;
-//
-//        public Params(String[] ids) {
-//            this.publicIds = ids;
-//        }
-//    }
-//
-//    public class FiberyQueryArgs {
-//        Query query;
-//        Params params;
-//
-//        public FiberyQueryArgs(String[] ids) {
-//            this.query = new Query();
-//            this.params = new Params(ids);
-//        }
-//    }
-//
-//    public class FiberyQueryParams {
-//        public String command = "fibery.entity/query";
-//        public Object args;
-//
-//        public FiberyQueryParams(String[] ids) {
-//            this.args = new FiberyQueryArgs(ids);
-//        }
-//    }
-
-    //######################## Update Classes ########################
-
-    public class FiberyUpdateParams {
-        public String command = "fibery.entity/update";
-        public FiberyUpdateArgs args;
-
-        public FiberyUpdateParams(String taskId, String promoteToId) {
-            this.args = new FiberyUpdateArgs(taskId, promoteToId);
-        }
-    }
-
-    public class FiberyUpdateArgs {
-        String type = "Main/Task";
-        FiberyUpdateArgs_Entity entity;
-
-        public FiberyUpdateArgs(String taskId, String promoteToId) {
-            this.entity = new FiberyUpdateArgs_Entity(taskId, promoteToId);
-        }
-    }
-
-    public class FiberyUpdateArgs_Entity {
-        @SerializedName("fibery/id")
-        String taskId;
-        @SerializedName("workflow/state")
-        FiberyUpdateArgs_WorkflowState state;
-
-        public FiberyUpdateArgs_Entity(String taskId, String promoteToId) {
-            this.taskId = taskId;
-            this.state = new FiberyUpdateArgs_WorkflowState(promoteToId);
-        }
-    }
-
-    public class FiberyUpdateArgs_WorkflowState {
-        @SerializedName("fibery/id")
-        String id;
-
-        public FiberyUpdateArgs_WorkflowState(String id) {
-            this.id = id;
-        }
     }
 
     //######################## Functionality ########################
@@ -219,7 +123,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 args   : [
                         "type"  : "Main/Task",
                         "entity": [
-                                "fibery/id"     : "ed09bd10-7f90-11ed-beb6-d5e2cb5ace24",
+                                "fibery/id"     : task["fibery/id"],
                                 "workflow/state": ["fibery/id": promoteId]
                         ]
                 ]
