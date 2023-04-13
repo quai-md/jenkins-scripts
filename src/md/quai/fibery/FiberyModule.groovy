@@ -2,6 +2,7 @@ package md.quai.fibery
 
 import com.nu.art.modular.core.Module
 import md.quai.fibery.FiberyTransaction
+import com.nu.art.pipeline.workflow.variables.Var_Env
 
 
 public class FiberyModule extends Module {
