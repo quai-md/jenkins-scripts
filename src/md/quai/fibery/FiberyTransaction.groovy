@@ -60,15 +60,13 @@ public class FiberyTransaction extends Transaction_JSON {
         return tasks
     }
 
-    public void promoteTasks(Closure<String> stateIdResolver, Object[] data) {
+    public void promoteTasks(Closure<String> stateIdResolver, List<Object> tasks) {
         def body = [];
         String URL = "https://quai.fibery.io/api/commands";
 
-        data.each { query ->
-            query.result.each { result ->
-                String stateId = stateIdResolver.call(result)
-                body.add(generateTaskPromotionQuery(result['fibery/id'], stateId))
-            }
+        tasks.each { task ->
+            String stateId = stateIdResolver.call(task)
+            body.add(generateTaskPromotionQuery(task['fibery/id'], stateId))
         }
 
         def updateStream = createRequest()

@@ -54,7 +54,7 @@ public class FiberyModule extends Module {
             throw new BadImplementationException(error);
         }
 
-        transaction.promoteTasks(this.envProjects[this.env].resolveTaskState, data)
+        transaction.promoteTasks(this.envProjects[this.env].resolveTaskState, tasks)
         String message = "Task Promotion - Success:\n"
         tasks.each { task ->
             message += this.generateTaskSlackMessage(task)
