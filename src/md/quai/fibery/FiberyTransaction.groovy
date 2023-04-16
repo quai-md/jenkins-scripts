@@ -4,7 +4,6 @@ import com.nu.art.core.tools.StreamTools
 import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.consts.HttpMethod
 import groovy.json.JsonSlurper
-import md.quai.fibery.FiberyModule
 
 import java.util.List
 
@@ -13,13 +12,11 @@ public class FiberyTransaction extends Transaction_JSON {
     //######################## Params ########################
 
     private final String token;
-    private FiberyEnvConfig config;
 
     //######################## Init ########################
 
-    public FiberyTransaction(String token, String env) {
+    public FiberyTransaction(String token) {
         this.token = token;
-        this.config = getModule(FiberyModule.class).envProjects[env];
     }
 
     //######################## Functionality ########################
