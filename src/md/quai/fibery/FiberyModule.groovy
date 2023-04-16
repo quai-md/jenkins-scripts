@@ -35,7 +35,7 @@ public class FiberyModule extends Module {
     }
 
     public void promoteTasks(String[] taskPublicIds) {
-        def Slack = getModule(SlackModule.class)
+        //Get tasks
         FiberyTransaction transaction = new FiberyTransaction(token, this.env);
         List<Object> tasks = transaction.queryTasks(taskPublicIds);
         List<Object> nonPassingTasks = this.validateTasks(tasks)
@@ -50,16 +50,17 @@ public class FiberyModule extends Module {
                 error += "${task["fibery/public-id"]}\n"
             }
 
-            Slack.notify(message, "#FF0000", "__web-lifecycle")
+            getModule(SlackModule.class).notify(message, "#FF0000", "__web-lifecycle")
             throw new BadImplementationException(error);
         }
 
+        //All tasks valid, promote
         transaction.promoteTasks(this.envProjects[this.env].resolveTaskState, tasks)
         String message = "Task Promotion - Success:\n"
         tasks.each { task ->
             message += this.generateTaskSlackMessage(task)
         }
-        Slack.notify(message, "#00FF00", "__web-lifecycle")
+        getModule(SlackModule.class).notify(message, "#00FF00", "__web-lifecycle")
     }
 
     private String generateTaskSlackMessage(Object task) {
