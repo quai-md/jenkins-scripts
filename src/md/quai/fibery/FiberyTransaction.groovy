@@ -3,7 +3,6 @@ package md.quai.fibery
 import com.nu.art.core.tools.StreamTools
 import com.nu.art.http.Transaction_JSON
 import com.nu.art.http.consts.HttpMethod
-import com.nu.art.pipeline.exceptions.BadImplementationException
 import groovy.json.JsonSlurper
 import md.quai.fibery.FiberyModule
 
@@ -25,8 +24,7 @@ public class FiberyTransaction extends Transaction_JSON {
 
     //######################## Functionality ########################
 
-    public List<String> queryTasks(String[] taskPublicIds) {
-        this.logInfo('############# HERE - queryTasks #############')
+    public List<Object> queryTasks(String[] taskPublicIds) {
         def queryBody = [[
                                  command: "fibery.entity/query",
                                  args   : [
@@ -50,39 +48,26 @@ public class FiberyTransaction extends Transaction_JSON {
                 .executeSync()
 
         def responseAsString = StreamTools.readFullyAsString(stream);
-
-        this.logInfo("############# HERE - response as string #############")
-        this.logInfo(responseAsString);
-
-        this.logInfo("############# HERE - Task Validation #############");
-
         def data = new JsonSlurper().parseText(responseAsString);
-
-        List<String> successfulTasks = new ArrayList<String>();
-        List<String> nonPassingTaskIds = new ArrayList<String>();
+        List<Object> tasks = new ArrayList<Object>()
 
         data.each { query ->
-            query.result.each { result ->
-                if (!this.config.validateTask.call(result))
-                    nonPassingTaskIds.add(result["fibery/public-id"]);
-                else
-                    successfulTasks.add(this.generateTaskSlackMessage(result))
+            query.result.each { task ->
+                tasks.add(task)
             }
         }
 
-        if (nonPassingTaskIds.size() > 0) {
-            String error = String.format("Tasks with invalid states: %s", String.join(",", nonPassingTaskIds));
-            throw new BadImplementationException(error);
-        }
+        return tasks
+    }
 
-        this.logInfo("Task Validation - All tasks are okay!");
-
-        this.logInfo("############# HERE - Task Promotion #############");
-        def updateBody = [];
+    public void promoteTasks(Closure<String> stateIdResolver, Object[] data) {
+        def body = [];
+        String URL = "https://quai.fibery.io/api/commands";
 
         data.each { query ->
             query.result.each { result ->
-                updateBody.add(generateTaskPromotionQuery(result))
+                String stateId = stateIdResolver.call(result)
+                body.add(generateTaskPromotionQuery(result['fibery/id'], stateId))
             }
         }
 
@@ -90,28 +75,21 @@ public class FiberyTransaction extends Transaction_JSON {
                 .setMethod(HttpMethod.Post)
                 .setUrl(URL)
                 .addHeader("Authorization", "Token " + token)
-                .setBody(gson.toJson(updateBody))
+                .setBody(gson.toJson(body))
                 .executeSync()
 
-        def updateResponseAsString = StreamTools.readFullyAsString(updateStream);
-        this.logInfo("############# HERE - update response as string #############")
-        this.logInfo(updateResponseAsString);
-        return successfulTasks;
+//        def updateResponseAsString = StreamTools.readFullyAsString(updateStream);
+//        this.logInfo(updateResponseAsString);
     }
 
-    private String generateTaskSlackMessage(def task) {
-        return "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}> - ${task["Main/Name"]}"
-    }
-
-    private LinkedHashMap<String, Object> generateTaskPromotionQuery(def task) {
-        String promoteId = this.config.resolveTaskState.call(task)
+    private LinkedHashMap<String, Object> generateTaskPromotionQuery(String taskId, String stateId) {
         return [
                 command: "fibery.entity/update",
                 args   : [
                         "type"  : "Main/Task",
                         "entity": [
-                                "fibery/id"     : task["fibery/id"],
-                                "workflow/state": ["fibery/id": promoteId]
+                                "fibery/id"     : taskId,
+                                "workflow/state": ["fibery/id": stateId]
                         ]
                 ]
         ]
