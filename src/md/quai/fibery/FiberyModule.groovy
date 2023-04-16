@@ -57,10 +57,19 @@ public class FiberyModule extends Module {
         //All tasks valid, promote
         transaction.promoteTasks(this.envProjects[this.env].resolveTaskState, tasks)
         String message = "Task Promotion - Success:\n"
-        tasks.each { task ->
+        Boolean showTitle = true;
+
+        //Print tasks to slack in groups of 10
+        tasks.eachWithIndex { task, index ->
+            if (index % 10 == 0 && index != 0) {
+                getModule(SlackModule.class).notify(message, "#00FF00", "__web-lifecycle", showTitle)
+                message = "";
+                showTitle = false;
+            }
             message += this.generateTaskSlackMessage(task)
         }
-        getModule(SlackModule.class).notify(message, "#00FF00", "__web-lifecycle")
+
+        getModule(SlackModule.class).notify(message, "#00FF00", "__web-lifecycle", showTitle)
     }
 
     private String generateTaskSlackMessage(Object task) {
