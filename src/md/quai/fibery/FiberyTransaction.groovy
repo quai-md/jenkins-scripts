@@ -100,7 +100,7 @@ public class FiberyTransaction extends Transaction_JSON {
     }
 
     private String generateTaskSlackMessage(def task) {
-        return "- <\"https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}\"|${task["fibery/public-id"]}> - ${task["Main/Name"]}"
+        return "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}> - ${task["Main/Name"]}"
     }
 
     private LinkedHashMap<String, Object> generateTaskPromotionQuery(def task) {
