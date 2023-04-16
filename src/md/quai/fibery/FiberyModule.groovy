@@ -36,7 +36,7 @@ public class FiberyModule extends Module {
 
     public void promoteTasks(String[] taskPublicIds) {
         //Get tasks
-        FiberyTransaction transaction = new FiberyTransaction(token, this.env);
+        FiberyTransaction transaction = new FiberyTransaction(token);
         List<Object> tasks = transaction.queryTasks(taskPublicIds);
         List<Object> nonPassingTasks = this.validateTasks(tasks)
 
