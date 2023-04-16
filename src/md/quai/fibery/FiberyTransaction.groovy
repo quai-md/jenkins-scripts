@@ -45,7 +45,7 @@ public class FiberyTransaction extends Transaction_JSON {
                 .executeSync()
 
         def responseAsString = StreamTools.readFullyAsString(stream);
-        def data = new JsonSlurper().parseText(responseAsString);
+        def data = new JsonSlurperClassic().parseText(responseAsString);
         List<Object> tasks = new ArrayList<Object>()
 
         data.each { query ->
