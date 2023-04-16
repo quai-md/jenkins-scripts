@@ -25,7 +25,7 @@ public class FiberyTransaction extends Transaction_JSON {
 
     //######################## Functionality ########################
 
-    public void queryTasks(String[] taskPublicIds) {
+    public List<String> queryTasks(String[] taskPublicIds) {
         this.logInfo('############# HERE - queryTasks #############')
         def queryBody = [[
                                  command: "fibery.entity/query",
@@ -34,7 +34,7 @@ public class FiberyTransaction extends Transaction_JSON {
                                                  "q/from"  : "Main/Task",
                                                  "q/where" : ["q/in", "fibery/public-id", "\$publicIds"],
                                                  "q/limit" : "q/no-limit",
-                                                 "q/select": ["fibery/id", "fibery/public-id", ["workflow/state": ["enum/name", "fibery/id"]]]
+                                                 "q/select": ["fibery/id", "fibery/public-id", "Main/Name", ["workflow/state": ["enum/name", "fibery/id"]]]
                                          ],
                                          params: [
                                                  $publicIds: taskPublicIds
@@ -57,12 +57,16 @@ public class FiberyTransaction extends Transaction_JSON {
         this.logInfo("############# HERE - Task Validation #############");
 
         def data = new JsonSlurper().parseText(responseAsString);
+
+        List<String> successfulTasks = new ArrayList<String>();
         List<String> nonPassingTaskIds = new ArrayList<String>();
 
         data.each { query ->
             query.result.each { result ->
                 if (!this.config.validateTask.call(result))
                     nonPassingTaskIds.add(result["fibery/public-id"]);
+                else
+                    successfulTasks.add(this.generateTaskSlackMessage(result))
             }
         }
 
@@ -92,7 +96,11 @@ public class FiberyTransaction extends Transaction_JSON {
         def updateResponseAsString = StreamTools.readFullyAsString(updateStream);
         this.logInfo("############# HERE - update response as string #############")
         this.logInfo(updateResponseAsString);
+        return successfulTasks;
+    }
 
+    private String generateTaskSlackMessage(def task) {
+        return "- <\"https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}\"|${task["fibery/public-id"]}> - ${task["Main/Name"]}"
     }
 
     private LinkedHashMap<String, Object> generateTaskPromotionQuery(def task) {

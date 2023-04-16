@@ -26,10 +26,9 @@ public class FiberyModule extends Module {
         this.env = env;
     }
 
-    public String[] promoteTasks(String[] taskPublicIds) {
+    public List<String> promoteTasks(String[] taskPublicIds) {
         this.logInfo('############# HERE - promoteTasks #############')
         FiberyTransaction transaction = new FiberyTransaction(token, this.env);
-        transaction.queryTasks(taskPublicIds);
-        return taskPublicIds;
+        return transaction.queryTasks(taskPublicIds);
     }
 }
