@@ -29,7 +29,7 @@ public class FiberyTransaction extends Transaction_JSON {
                                                  "q/from"  : "Main/Task",
                                                  "q/where" : ["q/in", "fibery/public-id", "\$publicIds"],
                                                  "q/limit" : "q/no-limit",
-                                                 "q/select": ["fibery/id", "fibery/public-id", "Main/Name", ["workflow/state": ["enum/name", "fibery/id"]]]
+                                                 "q/select": ["fibery/id", "fibery/public-id", "Main/Name", ["workflow/state": ["enum/name", "fibery/id"]], ["Main/Task Type": ["fibery/id"]]]
                                          ],
                                          params: [
                                                  $publicIds: taskPublicIds
