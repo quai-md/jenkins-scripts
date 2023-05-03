@@ -94,7 +94,7 @@ public class FiberyModule extends Module {
         String message = "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}>"
         if (success)
             message += " *[${stateName}]*"
-        message += " ${task["Main/Name"]}\n"
+        message += " - ${task["Main/Name"]}\n"
         return message
     }
 }
