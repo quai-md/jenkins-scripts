@@ -25,6 +25,15 @@ public class FiberyModule extends Module {
         this.env = env;
     }
 
+    private List<Object> tasksToBePromoted(List<Object> tasks) {
+        List<Object> toRet = new ArrayList<Object>()
+        tasks.each { task ->
+            if (this.envProjects[this.env].shouldPromote.call(task))
+                toRet.add(task)
+        }
+        return toRet
+    }
+
     private List<Object> validateTasks(List<Object> tasks) {
         List<Object> nonPassingTasks = new ArrayList<Object>()
         tasks.each { task ->
@@ -38,6 +47,7 @@ public class FiberyModule extends Module {
         //Get tasks
         FiberyTransaction transaction = new FiberyTransaction(token);
         List<Object> tasks = transaction.queryTasks(taskPublicIds);
+        tasks = this.tasksToBePromoted(tasks)
         List<Object> nonPassingTasks = this.validateTasks(tasks)
 
         //If any invalid tasks
