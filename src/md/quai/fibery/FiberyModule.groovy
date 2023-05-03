@@ -46,8 +46,14 @@ public class FiberyModule extends Module {
     public void promoteTasks(String[] taskPublicIds) {
         //Get tasks
         FiberyTransaction transaction = new FiberyTransaction(token);
+
         List<Object> tasks = transaction.queryTasks(taskPublicIds);
         tasks = this.tasksToBePromoted(tasks)
+
+        //If no tasks to promote
+        if (tasks.size() == 0)
+            return
+        
         List<Object> nonPassingTasks = this.validateTasks(tasks)
 
         //If any invalid tasks
