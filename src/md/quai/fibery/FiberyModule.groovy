@@ -62,7 +62,7 @@ public class FiberyModule extends Module {
             String error = "Failed promoting tasks:\n"
 
             nonPassingTasks.each { task ->
-                message += this.generateTaskSlackMessage(task)
+                message += this.generateTaskSlackMessage(task, false)
                 error += "${task["fibery/public-id"]}\n"
             }
 
@@ -82,7 +82,7 @@ public class FiberyModule extends Module {
                 message = "";
                 showTitle = false;
             }
-            message += this.generateTaskSlackMessage(task)
+            message += this.generateTaskSlackMessage(task, true)
         }
 
         getModule(SlackModule.class).notify(message, "#00FF00", "__web-lifecycle", showTitle)
