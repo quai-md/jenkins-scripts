@@ -53,7 +53,7 @@ public class FiberyModule extends Module {
         //If no tasks to promote
         if (tasks.size() == 0)
             return
-        
+
         List<Object> nonPassingTasks = this.validateTasks(tasks)
 
         //If any invalid tasks
@@ -89,6 +89,6 @@ public class FiberyModule extends Module {
     }
 
     private String generateTaskSlackMessage(Object task) {
-        return "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}> - ${task["Main/Name"]}\n"
+        return "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}> :arrow_right: ${task["Main/Name"]}\n"
     }
 }
