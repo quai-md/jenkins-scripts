@@ -88,9 +88,13 @@ public class FiberyModule extends Module {
         getModule(SlackModule.class).notify(message, "#00FF00", "__web-lifecycle", showTitle)
     }
 
-    private String generateTaskSlackMessage(Object task) {
+    private String generateTaskSlackMessage(Object task, Boolean success) {
         String stateId = this.envProjects[this.env].resolveTaskState.call(task)
         String stateName = this.envProjects[this.env].resolveStateName.call(stateId)
-        return "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}> *[${stateName}]* - ${task["Main/Name"]}\n"
+        String message = "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}>"
+        if (success)
+            message += " *[${stateName}]*"
+        message += " ${task["Main/Name"]}\n"
+        return message
     }
 }
