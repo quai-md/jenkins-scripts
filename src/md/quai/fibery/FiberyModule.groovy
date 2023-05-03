@@ -72,7 +72,7 @@ public class FiberyModule extends Module {
 
         //All tasks valid, promote
         transaction.promoteTasks(this.envProjects[this.env].resolveTaskState, tasks)
-        String message = "Task Promotion - Success:\n"
+        String message = ":typingcat: *Task Promotion - Success:* :greatsuccess:\n"
         Boolean showTitle = true;
 
         //Print tasks to slack in groups of 10
@@ -91,6 +91,6 @@ public class FiberyModule extends Module {
     private String generateTaskSlackMessage(Object task) {
         String stateId = this.envProjects[this.env].resolveTaskState.call(task)
         String stateName = this.envProjects[this.env].resolveStateName.call(stateId)
-        return "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}> :arrow_right: ${stateName} :typingcat: ${task["Main/Name"]}\n"
+        return "- <https://quai.fibery.io/Main/Task/${task["fibery/public-id"]}|${task["fibery/public-id"]}> *[${stateName}]* - ${task["Main/Name"]}\n"
     }
 }
